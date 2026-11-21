@@ -3,12 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:penabella_mobprog/constants.dart';
 import 'package:penabella_mobprog/widgets/custom_text.dart';
 
-class NewsFeedCard extends StatelessWidget {
+class NewsFeedCard extends StatefulWidget {
   final String userName;
   final String postContent;
   final String date;
   final int? numOfLikes;
   final bool? hasImage;
+
+  final String? userImage;
+  final String? currentUserImage;
   const NewsFeedCard({
     super.key,
     required this.userName,
@@ -16,8 +19,49 @@ class NewsFeedCard extends StatelessWidget {
     required this.date,
     this.numOfLikes,
     this.hasImage,
+    this.userImage,
+    this.currentUserImage,
   });
 
+  @override
+  State<NewsFeedCard> createState() => _NewsFeedCardState();
+}
+
+class _NewsFeedCardState extends State<NewsFeedCard> {
+  bool isLiked = false;
+  int likeCount = 0;
+  final FocusNode _commentFocusNode = FocusNode();
+  final TextEditingController _commentController = TextEditingController();
+  
+  @override
+  void initState() {
+    super.initState();
+    likeCount = widget.numOfLikes ?? 0;
+  }
+
+  @override
+  void dispose() {
+    _commentFocusNode.dispose();
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  void _focusCommentField() {
+    _commentFocusNode.requestFocus();
+  }
+
+  void _toggleLike() {
+    setState(() {
+      if (isLiked) {
+        isLiked = false;
+        likeCount--;
+      } else {
+        isLiked = true;
+        likeCount++;
+      }
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final screenUtilSp = ScreenUtil().setSp(10);
@@ -35,13 +79,22 @@ class NewsFeedCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.person),
+                CircleAvatar(
+                  radius: ScreenUtil().setSp(18),
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: widget.userImage != null
+                      ? AssetImage(widget.userImage!)
+                      : null,
+                  child: widget.userImage == null
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : null,
+                ),
                 SizedBox(width: screenUtilWidth),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: userName,
+                      text: widget.userName,
                       fontSize: screenUtilFontUserNameSize,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -51,7 +104,7 @@ class NewsFeedCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CustomText(
-                          text: date,
+                          text: widget.date,
                           fontSize: ScreenUtil().setSp(12),
                           color: Colors.grey,
                         ),
@@ -72,12 +125,12 @@ class NewsFeedCard extends StatelessWidget {
             SizedBox(height: ScreenUtil().setHeight(5)),
             // ? POST CONTENT
             CustomText(
-              text: postContent,
+              text: widget.postContent,
               fontSize: ScreenUtil().setSp(12),
               color: Colors.black,
             ),
             SizedBox(height: ScreenUtil().setHeight(5)),
-            hasImage == true
+            widget.hasImage == true
               ? const Image(image: AssetImage('assets/images/iron_man.jpg'))
               : SizedBox. shrink(),
         
@@ -85,35 +138,53 @@ class NewsFeedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton.icon(
-                    onPressed: () {
-                      // ! LIKE BUTTON ACTION
-                    },
-                    icon: Icon(Icons.thumb_up, color: fbPrimary),
+                    onPressed: _toggleLike, // ! ADDED LIKE ACTION
+                    icon: Icon(
+                      isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                      color: isLiked ? fbPrimary : Colors.grey,
+                    ), // ! CHANGE ICON AND COLOR
                     label: CustomText(
-                      text: numOfLikes.toString(),
+                      text: likeCount.toString(),
                       fontSize: ScreenUtil().setSp(12),
-                      color: fbDarkPrimary ,
+                      color: isLiked ? fbPrimary : fbDarkPrimary,
                     ),
                   ),
-                  CustomText(
-                    text: 'Comment',
-                    fontSize: ScreenUtil().setSp(12),
-                    color: fbDarkPrimary,
+                  TextButton.icon(
+                    onPressed: _focusCommentField, // ! ADDED COMMENT ACTION
+                    icon: Icon(
+                      Icons.comment_outlined,
+                      color: Colors.grey,
+                      size: ScreenUtil().setSp(15),
+                    ),
+                    label: CustomText(
+                      text: 'Comment',
+                      fontSize: ScreenUtil().setSp(12),
+                      color: Colors.grey,
+                    ),
                   ),
                   TextButton.icon(
                     onPressed: () {}, // ! COMMENT BUTTON ACTION
-                    icon: Icon(Icons.redo, color: fbDarkPrimary),
+                    icon: Icon(Icons.redo, color: Colors.grey),
                     label: CustomText (
                     text: 'Share',
                     fontSize: ScreenUtil().setSp(12),
-                    color: fbDarkPrimary,
+                    color: Colors.grey,
                     ),
                   ),
                 ],
               ),
               Row(
                 children: [
-                  Icon(Icons.person),
+                  CircleAvatar(
+                    radius: ScreenUtil().setSp(14),
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: widget.currentUserImage != null
+                        ? AssetImage(widget.currentUserImage!)
+                        : null,
+                    child: widget.currentUserImage == null
+                        ? const Icon(Icons.person, color: Colors.white, size: 18)
+                        : null,
+                  ),
                   SizedBox(width: ScreenUtil().setWidth(10)),
                   Container(
                     padding: EdgeInsets.fromLTRB(

@@ -6,16 +6,22 @@ class NewsFeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const String myProfilePic = "assets/images/marvel_pfp.jpg";
+
     return ListView(
       children: const [
         NewsFeedCard(
           userName: 'Steve Rogers',
+          userImage: 'assets/images/captain_america_pfp.jpg',
+          currentUserImage: myProfilePic,
           postContent: 'I can do this all day! #AvengersAssemble',
           date: '2 hours ago',
           numOfLikes: 10,
         ),
         NewsFeedCard(
-          userName: 'Tony Stark', 
+          userName: 'Tony Stark',
+          userImage: 'assets/images/iron_man_pfp.jpg',
+          currentUserImage: myProfilePic,
           postContent: 'I am Iron Man. #GeniusBillionairePlayboyPhilanthropist', 
           date: 'December 1, 2023',
           numOfLikes: 3000,
