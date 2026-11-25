@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:penabella_mobprog/constants.dart';
 import 'package:penabella_mobprog/screens/newsfeed_screen.dart';
+import 'package:penabella_mobprog/screens/notification_screen.dart';
 import 'package:penabella_mobprog/widgets/custom_text.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: PageView(
         controller: _pageController,
-        children: const <Widget>[NewsFeedScreen()],
+        children: const <Widget>[
+          NewsFeedScreen(),
+          NotificationScreen(),],
         onPageChanged: (page) {
           setState(() {
             _selectedIndex = page;
@@ -44,10 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onTappedBar,
 
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home), label: 'Home'
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'User',
           ),
         ],
         selectedItemColor: fbPrimary,
