@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:penabella_mobprog/constants.dart';
 import 'package:penabella_mobprog/screens/newsfeed_screen.dart';
 import 'package:penabella_mobprog/screens/notification_screen.dart';
+import 'package:penabella_mobprog/screens/userProfile_screen.dart';
 import 'package:penabella_mobprog/widgets/custom_text.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,16 +17,24 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
+  static const List<String> _titles = [
+    'Shopee',
+    'Notification',
+    'User'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        shadowColor: fbTextColorWhite,
+        backgroundColor: shopeePrimary,
+        shadowColor: textColorWhite,
         elevation: 2,
         title: CustomText(
-          text: 'Facebook',
+          text: _titles[_selectedIndex],
           fontSize: ScreenUtil().setSp(25),
-          color: fbPrimary,
+          color: textColorWhite,
           fontFamily: 'Klavika',
           fontWeight: FontWeight(700),
           )
@@ -34,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         children: const <Widget>[
           NewsFeedScreen(),
-          NotificationScreen(),],
+          NotificationScreen(),
+          UserProfileScreen(),
+          ],
         onPageChanged: (page) {
           setState(() {
             _selectedIndex = page;
@@ -48,18 +59,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home), label: 'Home'
+            icon: Icon(Icons.home_outlined),
+            label: 'Home'
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.notifications_outlined),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person_outlined),
             label: 'User',
           ),
         ],
-        selectedItemColor: fbPrimary,
+        selectedItemColor: shopeePrimary,
         currentIndex: _selectedIndex,
         ),
     );

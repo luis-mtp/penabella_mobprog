@@ -4,14 +4,17 @@ import 'package:penabella_mobprog/constants.dart';
 import 'package:penabella_mobprog/widgets/custom_text.dart';
 
 class NewsFeedCard extends StatefulWidget {
+  static const String currentUserImage = "assets/images/marvel_pfp.jpg";
+  
   final String userName;
   final String postContent;
   final String date;
+
   final int? numOfLikes;
   final bool? hasImage;
-
   final String? userImage;
-  final String? currentUserImage;
+  final String? postImage; 
+
   const NewsFeedCard({
     super.key,
     required this.userName,
@@ -20,7 +23,7 @@ class NewsFeedCard extends StatefulWidget {
     this.numOfLikes,
     this.hasImage,
     this.userImage,
-    this.currentUserImage,
+    this.postImage,
   });
 
   @override
@@ -60,6 +63,52 @@ class _NewsFeedCardState extends State<NewsFeedCard> {
         likeCount++;
       }
     });
+  }
+
+  Widget _buildPostMedia() {
+    if (widget.hasImage != true) {
+      return const SizedBox.shrink();
+    }
+
+    final double mediaWidth = double.infinity;
+    final double mediaHeight = ScreenUtil().setHeight(320);
+
+    if (widget.postImage != null && widget.postImage!.isNotEmpty) {
+      return Padding(
+        padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(5)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(ScreenUtil().setSp(8)),
+          child: SizedBox(
+            width: mediaWidth,
+            height: mediaHeight,
+            child: Image.asset(
+              widget.postImage!,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: ScreenUtil().setHeight(5)),
+      child: Container(
+        width: mediaWidth,
+        height: mediaHeight,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(ScreenUtil().setSp(8)),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Center(
+          child: CustomText(
+            text: 'Placeholder',
+            fontSize: ScreenUtil().setSp(11),
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
   }
   
   @override
@@ -118,8 +167,8 @@ class _NewsFeedCardState extends State<NewsFeedCard> {
                     ),
                   ],
                 ),
-                Spacer(),
-                Icon(Icons.more_horiz),
+                const Spacer(),
+                const Icon(Icons.more_horiz),
               ],
             ),
             SizedBox(height: ScreenUtil().setHeight(5)),
@@ -130,9 +179,7 @@ class _NewsFeedCardState extends State<NewsFeedCard> {
               color: Colors.black,
             ),
             SizedBox(height: ScreenUtil().setHeight(5)),
-            widget.hasImage == true
-              ? const Image(image: AssetImage('assets/images/iron_man.jpg'))
-              : SizedBox. shrink(),
+            _buildPostMedia(),
         
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,12 +188,12 @@ class _NewsFeedCardState extends State<NewsFeedCard> {
                     onPressed: _toggleLike, // ! ADDED LIKE ACTION
                     icon: Icon(
                       isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                      color: isLiked ? fbPrimary : Colors.grey,
+                      color: isLiked ? shopeePrimary : Colors.grey,
                     ), // ! CHANGE ICON AND COLOR
                     label: CustomText(
                       text: likeCount.toString(),
                       fontSize: ScreenUtil().setSp(12),
-                      color: isLiked ? fbPrimary : fbDarkPrimary,
+                      color: isLiked ? shopeePrimary : sideColor,
                     ),
                   ),
                   TextButton.icon(
@@ -178,12 +225,9 @@ class _NewsFeedCardState extends State<NewsFeedCard> {
                   CircleAvatar(
                     radius: ScreenUtil().setSp(14),
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: widget.currentUserImage != null
-                        ? AssetImage(widget.currentUserImage!)
-                        : null,
-                    child: widget.currentUserImage == null
-                        ? const Icon(Icons.person, color: Colors.white, size: 18)
-                        : null,
+                    backgroundImage: const AssetImage(
+                      NewsFeedCard.currentUserImage,
+                    )
                   ),
                   SizedBox(width: ScreenUtil().setWidth(10)),
                   Container(

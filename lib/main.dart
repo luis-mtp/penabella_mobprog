@@ -3,6 +3,7 @@ import 'package:penabella_mobprog/screens/home_screen.dart';
 import 'package:penabella_mobprog/screens/newsfeed_screen.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:penabella_mobprog/screens/notification_screen.dart';
+import 'package:penabella_mobprog/screens/userProfile_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -27,6 +28,7 @@ class MainApp extends StatelessWidget {
             "/newsfeed": (context) => const NewsFeedScreen(),
             "/home": (context) => const HomeScreen(),
             "/notificationScreen": (context) => const NotificationScreen(),
+            "/userProfileScreen": (context) => const UserProfileScreen() 
           }
         );
       },
